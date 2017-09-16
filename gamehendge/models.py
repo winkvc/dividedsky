@@ -46,6 +46,10 @@ class Station(models.Model):
 class Path(models.Model):
     source = models.ForeignKey(Station, null=True, on_delete=models.SET_NULL, related_name="source_paths")
     dest = models.ForeignKey(Station, null=True, on_delete=models.SET_NULL, related_name="dest_paths")
+    encoded_polyline = models.TextField()
+
+    def __str__(self):
+        return str(self.source) + " TO " + str(self.dest)
 
 class Mook(models.Model):
     mook_type = models.IntegerField(choices=STATION_TYPE_CHOICES)
@@ -54,3 +58,6 @@ class Mook(models.Model):
     launch_time = models.DateTimeField(default=timezone.now)
     lat = models.FloatField()
     lon = models.FloatField()
+
+    def __str__(self):
+        return "MOOK TYPE " + str(self.mook_type) + " PATH " + str(self.path)
