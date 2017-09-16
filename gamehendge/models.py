@@ -39,6 +39,7 @@ class Station(models.Model):
     lon = models.FloatField()
     target = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
     owner = models.ForeignKey(Player, on_delete=models.CASCADE)
+    gathered_energy = models.IntegerField()
 
     def __str__(self):
     	return str(self.owner) + "'s " + StationType(self.station_type).name + " station"
