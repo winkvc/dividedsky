@@ -6,6 +6,8 @@ from django.http import JsonResponse, HttpResponse
 
 from .models import Station, STATION_TYPE_IMAGES, StationType
 
+import logic
+
 # Create your views here.
 
 def station_locations(request):
@@ -22,3 +24,6 @@ def station_locations(request):
 
 def map(request):
 	return render(request, 'gamehendge/map.html')
+
+def move_mooks_webpage(request):
+    return HttpResponse(logic.move_mooks())
