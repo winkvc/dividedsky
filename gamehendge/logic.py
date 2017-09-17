@@ -25,3 +25,6 @@ def move_mooks():
 	return_str = str(decoded_polylines)
 
 	return return_str
+
+def within(latlon1, latlon2, miles):
+	return True
