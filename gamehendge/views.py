@@ -52,4 +52,43 @@ def station_collect_energy(request):
                 station.save()
 
     return JsonResponse({"station_json" : station_json(station)})
-    #what? new station description I think.
+
+@csrf_exempt
+def build_station(request):
+    kind = request.POST["kind"]
+    lat = request.POST["latitude"]
+    lon = request.POST["longitude"]
+
+    # TODO: add check for nearby towers so towers can't be placed too close together
+
+    if not request.user.is_authenticated:
+        return JsonResponse({"error" : "Player not logged in."})
+
+    # check if there's enough energy for them to build their tower
+    # TODO: make this a database type? not sure how to do this.
+    if kind == 'lightning':
+        price = 15
+    else:
+        price = 10
+
+    player = Player.objects.get(user=request.user)
+    if (player.energy < price):
+        return JsonResponse({"error" : "Insufficient energy to buy tower."})
+
+    # charge the player
+    player.energy -= price
+
+    # build the tower
+    station = Station(
+        station_type=StationType[kind].value,
+        team=player.team,
+        lat=lat, lon=lon,
+        owner=player,
+    )
+
+    # save
+    station.save()
+    player.save()
+
+    return JsonResponse({"station_json" : station_json(station)})
+

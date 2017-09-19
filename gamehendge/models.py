@@ -28,6 +28,7 @@ STATION_TYPE_IMAGES = {
 class Player(models.Model):
     user = models.ForeignKey(User)
     energy = models.IntegerField()
+    team = models.IntegerField(choices=TEAM_CHOICES)
 
     def __str__(self):
     	return str(self.user)
@@ -39,7 +40,7 @@ class Station(models.Model):
     lon = models.FloatField()
     target = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
     owner = models.ForeignKey(Player, on_delete=models.CASCADE)
-    gathered_energy = models.IntegerField()
+    gathered_energy = models.IntegerField(default=0)
 
     def __str__(self):
     	return str(self.owner) + "'s " + StationType(self.station_type).name + " station"
