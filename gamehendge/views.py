@@ -92,3 +92,6 @@ def build_station(request):
 
     return JsonResponse({"station_json" : station_json(station)})
 
+def credit_energy(request):
+    logic.credit_energy()
+    return HttpResponse("Success.")

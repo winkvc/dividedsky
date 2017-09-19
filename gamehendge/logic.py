@@ -4,8 +4,9 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.utils import timezone
+from django.db import transaction
 
-from .models import Mook
+from .models import Mook, Station, StationType
 import polyline
 import math
 
@@ -86,3 +87,19 @@ def move_mooks():
 
 def within(latlon1, latlon2, miles):
 	return True
+
+def credit_energy():
+	# get all energy towers
+	energy_towers = Station.objects.filter(station_type = StationType["energy"].value)
+
+	print len(energy_towers)
+
+	# add one to their gathered_energy
+	for tower in energy_towers:
+		tower.gathered_energy += 1
+		print tower.gathered_energy
+
+	# update
+	with transaction.atomic():
+		for tower in energy_towers:
+			tower.save()
