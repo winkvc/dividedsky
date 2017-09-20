@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^station_collect_energy/$', views.station_collect_energy),
     url(r'^build_station/$', views.build_station),
     #url(r'^credit_energy/$', views.credit_energy) # this is a function for adding 1 to energy
+    url(r'^delete_station/$', views.delete_station)
 ]

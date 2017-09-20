@@ -3,9 +3,11 @@
 {% load static %}
 	<link rel="stylesheet" type="text/css" href="{% static 'gamehendge/styling.css' %}">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<title>Divided sky, the wind blows high!</title>
 </head>
 <body>
 	<h3>Divided Sky v0.0.0</h3>
+	<h4 id="energy"> Energy: {{energy}} </h4>
 	<button onClick=buildTower(map)> Build Tower </button>
 <div id="map"></div>
 <!-- Replace the value of the key parameter with your own API key. -->

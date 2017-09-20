@@ -2,13 +2,17 @@ var stationPks = {};
 var map;
 var userPosition;
 
+function displayEnergyValue(energyValue) {
+  $("#energy").html('Energy: ' + energyValue);
+}
+
 function getInfoWindow(element) {
   //if (element.)
   var htmlSource = "";
   if (element.station_type == "energy") {
     htmlSource +=
       "<p>Energy: " + element.gathered_energy + "</p>" +
-      "<button onClick=collectEnergy(" + element.db_id + ",map)>" + 
+      "<button onClick=collectEnergy(" + element.db_id + ",map,userPosition)>" + 
         "Collect Energy" + 
       "</button><br>";
   }
@@ -73,32 +77,42 @@ function initMap() {
     });
 };
 
-function collectEnergy(db_id, map) {
-
-  // TODO: unstub location here
+function collectEnergy(db_id, map, userPosition) {
 
   $.post( "station_collect_energy/", 
     {
       'pk' : db_id,
-      'latitude' : 44,
-      'longitude' : 14
+      'latitude' : userPosition.lat,
+      'longitude' : userPosition.lng
     }, function (reply) {
-      var station_json = reply.station_json;
-      stationPks[station_json.db_id].setMap(null);
-      renderStation(station_json, map);
-      google.maps.event.trigger(stationPks[station_json.db_id], 'click');
+      if (reply.error) {
+        alert(reply.error);
+      } else {
+        var station_json = reply.station_json;
+        stationPks[station_json.db_id].setMap(null);
+        renderStation(station_json, map);
+        google.maps.event.trigger(stationPks[station_json.db_id], 'click');
+        displayEnergyValue(reply.energy);
+      }
     }, 'json' );
 };
 
 function deleteStation(db_id) {
-  // make api request
-
-  // TODO: write this code
+  $.post( "delete_station/", 
+    {
+      'pk' : db_id
+    }, function (reply) {
+      if (reply.error) {
+        alert(reply.error);
+      } else {
+        stationPks[db_id].setMap(null);
+        delete stationPks[db_id];
+        displayEnergyValue(reply.energy);
+      }
+    }, 'json' );
 };
 
 function sendBuildTowerRequest(kind, map, userPosition) {
-  // TODO: unhardcode this
-
   $.post( "build_station/", 
     {
       'kind' : kind,
@@ -110,6 +124,7 @@ function sendBuildTowerRequest(kind, map, userPosition) {
       } else {
         var station_json = reply.station_json;
         renderStation(station_json, map);
+        displayEnergyValue(reply.energy);
       }
     }, 'json' );
 };

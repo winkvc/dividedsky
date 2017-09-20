@@ -86,6 +86,7 @@ def move_mooks():
 	return mook_new_lat_lon_list
 
 def within(latlon1, latlon2, miles):
+	# TODO: write code to check distance
 	return True
 
 def credit_energy():
