@@ -3,14 +3,16 @@ var map;
 var userPosition;
 var directionsDisplay;
 var directionsService;
+var listeningForReroute = false;
+var rerouteStationDbId = null;
 
 function displayEnergyValue(energyValue) {
   $("#energy").html('Energy: ' + energyValue);
-}
+};
 
 function clearStationPath() {
   directionsDisplay.setDirections({routes: []});
-}
+};
 
 function renderStationPath(element) {
   // also call the current request
@@ -29,7 +31,7 @@ function renderStationPath(element) {
       }
     });
   }
-}
+};
 
 function getInfoWindow(element) {
   //if (element.)
@@ -37,6 +39,7 @@ function getInfoWindow(element) {
   if (element.station_type === "energy") {
     htmlSource +=
       "<p>Energy: " + element.gathered_energy + "</p>" +
+      // TODO: make the button not appear if it's not yours
       "<button onClick=collectEnergy(" + element.db_id + ",map,userPosition)>" + 
         "Collect Energy" + 
       "</button><br>";
@@ -44,12 +47,11 @@ function getInfoWindow(element) {
   else {
     htmlSource +=
       //"<p id='loading-text-" + element.db_id + "'>Loading path...</p>" +
+      // TODO: make the button not appear if it's not yours
       "<button id='button-" + element.db_id + 
-      "' onClick=changeTargetButtonPress(" + element.db_id + ",map,userPosition)>" + 
+      "' onClick=changeTargetButtonPress(" + element.db_id + ")>" + 
         "Change Target" + 
       "</button><br>";
-
-    
   }
 
   htmlSource +=
@@ -68,6 +70,31 @@ function getInfoWindow(element) {
   return infowindow;
 };
 
+function changeTargetButtonPress(db_id) {
+  // make a note that the next tower selected should be chosen
+  listeningForReroute = true;
+  rerouteStationDbId = db_id;
+};
+
+function changeTargetRequest(targetDbId) {
+  var sourceDbId = rerouteStationDbId;
+  $.post( "change_target/", 
+    {
+      'source' : rerouteStationDbId,
+      'target' : targetDbId,
+      'latitude' : userPosition.lat,
+      'longitude' : userPosition.lng
+    }, function (reply) {
+      if (reply.error) {
+        alert(reply.error);
+      } else {
+        var path_json = reply.path_json;
+        stationPks[sourceDbId].station_json.target = path_json.target;
+        renderStationPath(stationPks[sourceDbId].station_json);
+      }
+    }, 'json' );
+}
+
 function renderStation (element, map) {
   var marker = new google.maps.Marker({
     position: {lat : +element.position.lat, lng : +element.position.lng},
@@ -77,11 +104,17 @@ function renderStation (element, map) {
 
   // make an infowindow
   var infowindow = getInfoWindow(element);
+  marker.station_json = element;
 
   // attach listener
   marker.addListener('click', function () {
-    infowindow.open(map, marker);
-    renderStationPath(element);
+    if (listeningForReroute) {
+      changeTargetRequest(element.db_id);
+      listeningForReroute = false;
+    } else {
+      infowindow.open(map, marker);
+      renderStationPath(marker.station_json);
+    }
   });
 
   stationPks[element.db_id] = marker;
@@ -144,11 +177,6 @@ function collectEnergy(db_id, map, userPosition) {
         displayEnergyValue(reply.energy);
       }
     }, 'json' );
-};
-
-function changeTargetButtonPress(db_id, map, userPosition) {
-  // make a note that the next tower selected should be chosen
-
 };
 
 function deleteStation(db_id) {

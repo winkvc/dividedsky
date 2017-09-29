@@ -138,3 +138,58 @@ def delete_station(request):
     station.delete()
 
     return JsonResponse({"energy" : get_player_energy(request)})
+
+@csrf_exempt
+def change_target(request):
+    """$.post( "change_target/", 
+    {
+      'source' : rerouteStationDbId,
+      'target' : targetDbId,
+      'latitude' : userPosition.lat,
+      'longitude' : userPosition.lng
+    }, function (reply) {
+      if (reply.error) {
+        alert(reply.error);
+      } else {
+        var path_json = reply.path_json;
+        renderStationPath(path_json, map);
+      }
+    }, 'json' );"""
+
+    source_pk = request.POST["source"]
+    target_pk = request.POST["target"]
+    lat = request.POST["latitude"]
+    lon = request.POST["longitude"]
+
+    source = Station.objects.get(pk=source_pk)
+    target = Station.objects.get(pk=target_pk)
+
+    if not logic.within((lat, lon), (source.lat, source.lon), 0.1):
+        return JsonResponse({"error" : "Too far from tower."})
+    if not request.user.is_authenticated:
+        return JsonResponse({"error" : "Unathenticated user."})
+
+    player = Player.objects.get(user=request.user)
+    if source.owner != player:
+        return JsonResponse({"error" : "Not your tower to change target of."})
+
+    source.target = target
+    # TODO: change the path too?
+    source.save()
+
+    response = {
+        "path_json" : {
+            "position" : {
+                "lat" : source.lat,
+                "lng" : source.lon
+            }, 
+            "target" : {
+                "lat" : source.target.lat,
+                "lng" : source.target.lon
+            }
+        }
+    }
+
+    print(response)
+
+    return JsonResponse(response)
