@@ -13,7 +13,7 @@ from django.views.decorators.csrf import csrf_exempt
 # Create your views here.
 
 def station_json(station):
-    return {
+    returnable_json = {
         "position": {"lat": station.lat, "lng": station.lon}, 
         "icon" : STATION_TYPE_IMAGES[StationType(station.station_type)] ,
         "station_type" : StationType(station.station_type).name ,
@@ -21,6 +21,11 @@ def station_json(station):
         "db_id" : station.pk
         # later, add the callbackOptions
     }
+
+    if station.target:
+        returnable_json["target"] = {"lat": station.target.lat, "lng": station.target.lon}
+
+    return returnable_json
 
 def station_locations(request):
     #if request.user.is_authenticated():

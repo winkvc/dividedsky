@@ -1,20 +1,55 @@
 var stationPks = {};
 var map;
 var userPosition;
+var directionsDisplay;
+var directionsService;
 
 function displayEnergyValue(energyValue) {
   $("#energy").html('Energy: ' + energyValue);
 }
 
+function clearStationPath() {
+  directionsDisplay.setDirections({routes: []});
+}
+
+function renderStationPath(element) {
+  // also call the current request
+  if (element.target !== undefined) {
+    var start = {lat : +element.position.lat, lng : +element.position.lng};
+    var end = {lat : +element.target.lat, lng : +element.target.lng}
+    directionsService.route({
+      origin: start,
+      destination: end,
+      travelMode: 'DRIVING'
+    }, function(response, status) {
+      if (status === 'OK') {
+        directionsDisplay.setDirections(response);
+      } else {
+        window.alert('Directions request failed due to ' + status);
+      }
+    });
+  }
+}
+
 function getInfoWindow(element) {
   //if (element.)
   var htmlSource = "";
-  if (element.station_type == "energy") {
+  if (element.station_type === "energy") {
     htmlSource +=
       "<p>Energy: " + element.gathered_energy + "</p>" +
       "<button onClick=collectEnergy(" + element.db_id + ",map,userPosition)>" + 
         "Collect Energy" + 
       "</button><br>";
+  }
+  else {
+    htmlSource +=
+      //"<p id='loading-text-" + element.db_id + "'>Loading path...</p>" +
+      "<button id='button-" + element.db_id + 
+      "' onClick=changeTargetButtonPress(" + element.db_id + ",map,userPosition)>" + 
+        "Change Target" + 
+      "</button><br>";
+
+    
   }
 
   htmlSource +=
@@ -26,6 +61,10 @@ function getInfoWindow(element) {
   var infowindow = new google.maps.InfoWindow({
     content: htmlSource
   });
+  google.maps.event.addListener(infowindow, 'closeclick', function(){
+    clearStationPath();
+  });
+
   return infowindow;
 };
 
@@ -42,6 +81,7 @@ function renderStation (element, map) {
   // attach listener
   marker.addListener('click', function () {
     infowindow.open(map, marker);
+    renderStationPath(element);
   });
 
   stationPks[element.db_id] = marker;
@@ -50,11 +90,21 @@ function renderStation (element, map) {
 function initMap() {
 
   $.getJSON('station_locations/', function(myJsonObject) {
-    // TODO: unhardcode the center data??
+    
+    directionsDisplay = new google.maps.DirectionsRenderer({
+      markerOptions: {
+        visible : false,
+      }
+    });
+    directionsService = new google.maps.DirectionsService;
+
     map = new google.maps.Map(document.getElementById('map'), {
       zoom: 14,
+      // TODO: unhardcode the center data??
       center: {lat: 37.424261, lng: -122.200397}
     });
+
+    directionsDisplay.setMap(map);
     
     myJsonObject.data.forEach( function(item) {
       renderStation(item, map);
@@ -73,7 +123,7 @@ function initMap() {
     } else {
       map.setCenter({lat: 37.424261, lng: -122.200397});
     } 
-    });
+  });
 };
 
 function collectEnergy(db_id, map, userPosition) {
@@ -94,6 +144,11 @@ function collectEnergy(db_id, map, userPosition) {
         displayEnergyValue(reply.energy);
       }
     }, 'json' );
+};
+
+function changeTargetButtonPress(db_id, map, userPosition) {
+  // make a note that the next tower selected should be chosen
+
 };
 
 function deleteStation(db_id) {
@@ -176,3 +231,5 @@ function buildTower(map) {
     marker.setMap(null);
   });
 };
+
+initMap();
