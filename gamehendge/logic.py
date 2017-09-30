@@ -93,12 +93,12 @@ def credit_energy():
 	# get all energy towers
 	energy_towers = Station.objects.filter(station_type = StationType["energy"].value)
 
-	print len(energy_towers)
+	#print len(energy_towers)
 
 	# add one to their gathered_energy
 	for tower in energy_towers:
 		tower.gathered_energy += 1
-		print tower.gathered_energy
+		#print tower.gathered_energy
 
 	# update
 	with transaction.atomic():

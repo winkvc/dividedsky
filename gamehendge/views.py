@@ -117,10 +117,6 @@ def build_station(request):
         "station_json" : station_json(station),
         "energy" : get_player_energy(request)})
 
-def credit_energy(request):
-    logic.credit_energy()
-    return HttpResponse("Success.")
-
 @csrf_exempt
 def delete_station(request):
     pk = request.POST["pk"]
