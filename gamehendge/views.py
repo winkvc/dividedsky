@@ -71,8 +71,8 @@ def move_mooks_webpage(request):
 @csrf_exempt
 def station_collect_energy(request):
     pk = request.POST["pk"]
-    lat = request.POST["latitude"]
-    lon = request.POST["longitude"]
+    lat = float(request.POST["latitude"])
+    lon = float(request.POST["longitude"])
 
     station = Station.objects.get(pk=pk)
     if not logic.within((lat, lon), (station.lat, station.lon), 0.1):
@@ -95,8 +95,8 @@ def station_collect_energy(request):
 @csrf_exempt
 def build_station(request):
     kind = request.POST["kind"]
-    lat = request.POST["latitude"]
-    lon = request.POST["longitude"]
+    lat = float(request.POST["latitude"])
+    lon = float(request.POST["longitude"])
 
     # TODO: add check for nearby towers so towers can't be placed too close together
 
