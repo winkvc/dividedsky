@@ -35,7 +35,7 @@ function renderStationPath(element) {
 
 function getInfoWindow(element) {
   //if (element.)
-  var htmlSource = "";
+  var htmlSource = "<p>Health: " + element.health + "</p>";
   if (element.station_type === "energy") {
     htmlSource +=
       "<p>Energy: " + element.gathered_energy + "/10 </p>" +
@@ -254,11 +254,11 @@ function buildTower(map) {
       "<button onClick='buildEnergyTower(map, userPosition)'>" + 
         "Energy Tower" + 
       "</button><br>" + 
-      "<p>Bullet Tower: 10 energy, spawns a bullet mook every thirty minutes.</p>" +
+      "<p>Bullet Tower: 10 energy, spawns a bullet mook every 60 minutes.</p>" +
       "<button onClick='buildBulletTower(map, userPosition)'>" + 
         "Bullet Tower" + 
       "</button><br>" + 
-      "<p>Lightning Tower: 15 energy, spawns a lightning mook every thirty minutes.</p>" +
+      "<p>Lightning Tower: 15 energy, spawns a lightning mook every 60 minutes.</p>" +
       "<button onClick='buildLightningTower(map, userPosition)'>" + 
         "Lightning Tower" + 
       "</button><br>";

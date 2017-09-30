@@ -7,13 +7,20 @@
 </head>
 <body>
 	<h3>Divided Sky v0.0.0</h3>
+	<h5>
+	{% if user.is_authenticated %}
+	You are currently logged in.
+	{% else %}
+	Login <a href="/accounts/login/">here</a> to activate the game.
+	{% endif %}
+	</h5>
 	<h4 id="energy"> Energy: {{energy}} </h4>
 	<button onClick=buildTower(map)> Build Tower </button>
 <div id="map">
 	loading...
 </div>
-<!-- Replace the value of the key parameter with your own API key. -->
 
+<!-- Replace the value of the key parameter with your own API key. -->
 <script
 src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBEEyNDsD9uaj2k2B07mtt_yEbDeuMVM84">
 </script>

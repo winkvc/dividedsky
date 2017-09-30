@@ -20,7 +20,8 @@ def station_json(station):
         "icon" : STATION_TYPE_IMAGES[StationType(station.station_type)] ,
         "station_type" : StationType(station.station_type).name ,
         "gathered_energy" : station.gathered_energy,
-        "db_id" : station.pk
+        "db_id" : station.pk,
+        "health" : station.health
         # later, add the callbackOptions
     }
 
@@ -40,7 +41,8 @@ def station_locations(request):
 def mook_json(mook):
     returnable_json = {
         "position": {"lat": mook.lat, "lng": mook.lon}, 
-        "icon" : MOOK_TYPE_IMAGES[MookType(mook.mook_type)]
+        "icon" : MOOK_TYPE_IMAGES[MookType(mook.mook_type)],
+        "health" : mook.health
     }
     return returnable_json
 
@@ -166,10 +168,12 @@ def change_target(request):
       }
     }, 'json' );"""
 
+    print request.POST
+
     source_pk = request.POST["source"]
     target_pk = request.POST["target"]
-    lat = request.POST["latitude"]
-    lon = request.POST["longitude"]
+    lat = float(request.POST["latitude"])
+    lon = float(request.POST["longitude"])
 
     source = Station.objects.get(pk=source_pk)
     target = Station.objects.get(pk=target_pk)

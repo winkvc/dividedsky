@@ -51,6 +51,7 @@ class Station(models.Model):
     target = models.ForeignKey("self", blank=True, null=True, on_delete=models.SET_NULL)
     owner = models.ForeignKey(Player, on_delete=models.CASCADE)
     gathered_energy = models.IntegerField(default=0)
+    health = models.IntegerField(default=100)
 
     def __str__(self):
     	return str(self.owner) + "'s " + StationType(self.station_type).name + " station"
@@ -70,6 +71,11 @@ class Mook(models.Model):
     launch_time = models.DateTimeField(default=timezone.now)
     lat = models.FloatField()
     lon = models.FloatField()
+    health = models.IntegerField(default=25)
+
+    @property
+    def owner(self):
+        return self.path.source.owner
 
     def __str__(self):
         return "MOOK TYPE " + str(self.mook_type) + " PATH " + str(self.path)
