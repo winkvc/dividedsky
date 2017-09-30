@@ -25,6 +25,16 @@ STATION_TYPE_IMAGES = {
 	StationType.lightning: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/raichu.png",
 }
 
+class MookType(Enum):
+    shooters = 2
+    lightning = 3
+MOOK_TYPE_CHOICES = ((mook_type.value, mook_type.name) for mook_type in MookType)
+
+MOOK_TYPE_IMAGES = {
+    MookType.shooters: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/tyrogue.png",
+    MookType.lightning: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/pikachu.png",
+}
+
 class Player(models.Model):
     user = models.ForeignKey(User)
     energy = models.IntegerField()

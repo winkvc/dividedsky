@@ -4,7 +4,9 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 
-from .models import Station, STATION_TYPE_IMAGES, StationType, Player
+from .models import Player, \
+    Station, STATION_TYPE_IMAGES, StationType, \
+    Mook, MOOK_TYPE_IMAGES, MookType
 
 import logic
 
@@ -34,6 +36,18 @@ def station_locations(request):
     return JsonResponse({"data" : stations_list})
     #else:
     #    return HttpResponse("Maybe login first?")
+
+def mook_json(mook):
+    returnable_json = {
+        "position": {"lat": mook.lat, "lng": mook.lon}, 
+        "icon" : MOOK_TYPE_IMAGES[MookType(mook.mook_type)]
+    }
+    return returnable_json
+
+def mook_locations(request):
+    mook_list = [mook_json(mook) for mook in Mook.objects.all()]
+
+    return JsonResponse({"data" : mook_list})
 
 def get_player_energy(request):
     if request.user.is_authenticated:

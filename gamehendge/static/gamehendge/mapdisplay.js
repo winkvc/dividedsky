@@ -38,7 +38,7 @@ function getInfoWindow(element) {
   var htmlSource = "";
   if (element.station_type === "energy") {
     htmlSource +=
-      "<p>Energy: " + element.gathered_energy + "</p>" +
+      "<p>Energy: " + element.gathered_energy + "/10 </p>" +
       // TODO: make the button not appear if it's not yours
       "<button onClick=collectEnergy(" + element.db_id + ",map,userPosition)>" + 
         "Collect Energy" + 
@@ -120,42 +120,55 @@ function renderStation (element, map) {
   stationPks[element.db_id] = marker;
 };
 
+function renderMook (element, map) {
+  var marker = new google.maps.Marker({
+    position: {lat : +element.position.lat, lng : +element.position.lng},
+    map: map,
+    icon: element.icon
+  });
+};
+
 function initMap() {
+  directionsDisplay = new google.maps.DirectionsRenderer({
+    markerOptions: {
+      visible : false,
+    }
+  });
+  directionsService = new google.maps.DirectionsService;
+
+  map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 14,
+    // TODO: unhardcode the center data??
+    center: {lat: 37.427489, lng: -122.170244}
+  });
+
+  directionsDisplay.setMap(map);
+
+  function setPosition(position) {
+    userPosition = {lat: position.coords.latitude, lng: position.coords.longitude};
+  };
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      function(position) {
+        setPosition(position);
+        map.setCenter({lat: position.coords.latitude, lng: position.coords.longitude});
+      });
+  } else {
+    alert("Your location is disabled, so you won't be able to do much.");
+  } 
 
   $.getJSON('station_locations/', function(myJsonObject) {
-    
-    directionsDisplay = new google.maps.DirectionsRenderer({
-      markerOptions: {
-        visible : false,
-      }
-    });
-    directionsService = new google.maps.DirectionsService;
-
-    map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 14,
-      // TODO: unhardcode the center data??
-      center: {lat: 37.424261, lng: -122.200397}
-    });
-
-    directionsDisplay.setMap(map);
     
     myJsonObject.data.forEach( function(item) {
       renderStation(item, map);
     });
+  });
 
-    function setPosition(position) {
-      userPosition = {lat: position.coords.latitude, lng: position.coords.longitude};
-    };
-
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        function(position) {
-          setPosition(position);
-          map.setCenter({lat: position.coords.latitude, lng: position.coords.longitude});
-        });
-    } else {
-      map.setCenter({lat: 37.424261, lng: -122.200397});
-    } 
+  $.getJSON('mook_locations/', function(myJsonObject) {
+    myJsonObject.data.forEach( function(item) {
+      renderMook(item, map);
+    });
   });
 };
 

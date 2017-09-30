@@ -26,7 +26,7 @@ def great_circle_distance(lat1, lon1, lat2, lon2):
 # for now, assumes first lat,lon in polyline is exactly where the mook starts
 # does a choppy polyline follow (does not interpolate between points; a problem if polyline points are far apart)
 def move_mooks():
-	mook_speed = .2 # in miles per hour
+	mook_speed = .3 # in miles per hour
 	mooks_list = Mook.objects.all()
 	mook_new_lat_lon_list = []
 	for mook in mooks_list:
@@ -34,6 +34,12 @@ def move_mooks():
 		mook_new_lat_lon = [mook.lat, mook.lon]
 		# have mook follow the polyline from its starting position (beginning of polyline) for a distance
 		# according to how long it has been in existence and how fast it moves
+		print len(mook.path.encoded_polyline)
+		print mook.path.encoded_polyline
+		print type(mook.path.encoded_polyline)
+
+		print (mook.path.encoded_polyline == u"ssmcFd}thVa@xC_@S]KyG{AiAUu@Os@UqBkAa@_@S_@c@b@b@n@^b@n@b@j@VbAZRB~A@b@DvG~Af@NZTPRPf@Fb@?|@YvBMrAMbBW`Dm@vEEr@Hv@F`@ZpA`@t@h@v@^\\^Vd@Vv@PRBTFALIp@Id@Qn@Yn@a@h@s@|@Yn@Uv@K`AI~GIj@Mn@g@z@s@b@w@RYNm@f@[^pDxF|ElHzAvB~AnBjBpBn@`@pAj@dCtA|@l@j@b@bAjAjAhBhDxFbHbLvAjCzAxDb@vAv@dDPx@")
+
 		points = polyline.decode(mook.path.encoded_polyline)
 		print mook.mook_type
 		#print points
@@ -55,9 +61,9 @@ def move_mooks():
 			if distance_travelled < distance_to_travel:
 				print 'mook lat,lon updated'
 				# this is where you want to update the mook's lat,lon like this
-				# mook.lat = lat2
-				# mook.lon = lon2
-				mook_new_lat_lon = [lat2, lon2]
+				mook.lat = lat2
+				mook.lon = lon2
+				
 
 
 			#print 'lat1'
@@ -83,7 +89,9 @@ def move_mooks():
 
 	#return_str = polyline.encode([(37.424622,-122.194203),(37.423898,-122.195737),(37.424128,-122.197862)],5)
 
-	return mook_new_lat_lon_list
+	with transaction.atomic():
+		for mook in mooks_list:
+			mook.save()
 
 def within(latlon1, latlon2, miles):
 	# TODO: write code to check distance
@@ -98,6 +106,8 @@ def credit_energy():
 	# add one to their gathered_energy
 	for tower in energy_towers:
 		tower.gathered_energy += 1
+		if tower.gathered_energy > 10:
+			tower.gathered_energy = 10
 		#print tower.gathered_energy
 
 	# update
