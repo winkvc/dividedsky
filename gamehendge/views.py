@@ -14,10 +14,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-def station_json(station):
+def station_json(station, player):
+
+    if (station.owner == player):
+        image_type = 'shiny'
+    else:
+        image_type = 'normal'
+
     returnable_json = {
         "position": {"lat": station.lat, "lng": station.lon}, 
-        "icon" : STATION_TYPE_IMAGES[StationType(station.station_type)] ,
+        "icon" : STATION_TYPE_IMAGES[StationType(station.station_type)].format(image_type),
         "station_type" : StationType(station.station_type).name ,
         "gathered_energy" : station.gathered_energy,
         "db_id" : station.pk,
@@ -31,23 +37,36 @@ def station_json(station):
     return returnable_json
 
 def station_locations(request):
+    player = None
+    if request.user.is_authenticated:
+        player = Player.objects.get(user=request.user)
     #if request.user.is_authenticated():
-    stations_list = [station_json(station) for station in Station.objects.all()]
+    stations_list = [station_json(station, player) for station in Station.objects.all()]
 
     return JsonResponse({"data" : stations_list})
     #else:
     #    return HttpResponse("Maybe login first?")
 
-def mook_json(mook):
+def mook_json(mook, player):
+
+    if (mook.owner == player):
+        image_type = 'shiny'
+    else:
+        image_type = 'normal'
+
     returnable_json = {
         "position": {"lat": mook.lat, "lng": mook.lon}, 
-        "icon" : MOOK_TYPE_IMAGES[MookType(mook.mook_type)],
+        "icon" : MOOK_TYPE_IMAGES[MookType(mook.mook_type)].format(image_type),
         "health" : mook.health
     }
     return returnable_json
 
 def mook_locations(request):
-    mook_list = [mook_json(mook) for mook in Mook.objects.all()]
+    player = None
+    if request.user.is_authenticated:
+        player = Player.objects.get(user=request.user)
+
+    mook_list = [mook_json(mook, player) for mook in Mook.objects.all()]
 
     return JsonResponse({"data" : mook_list})
 

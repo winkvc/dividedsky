@@ -20,9 +20,9 @@ class StationType(Enum):
 STATION_TYPE_CHOICES = ((station_type.value, station_type.name) for station_type in StationType)
 
 STATION_TYPE_IMAGES = {
-	StationType.energy: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/ditto.png",
-	StationType.shooters: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/hitmonchan.png",
-	StationType.lightning: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/raichu.png",
+	StationType.energy: "https://img.pokemondb.net/sprites/ruby-sapphire/{}/ditto.png",
+	StationType.shooters: "https://img.pokemondb.net/sprites/ruby-sapphire/{}/hitmonchan.png",
+	StationType.lightning: "https://img.pokemondb.net/sprites/ruby-sapphire/{}/raichu.png",
 }
 
 class MookType(Enum):
@@ -31,8 +31,8 @@ class MookType(Enum):
 MOOK_TYPE_CHOICES = ((mook_type.value, mook_type.name) for mook_type in MookType)
 
 MOOK_TYPE_IMAGES = {
-    MookType.shooters: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/tyrogue.png",
-    MookType.lightning: "https://img.pokemondb.net/sprites/ruby-sapphire/normal/pikachu.png",
+    MookType.shooters: "https://img.pokemondb.net/sprites/ruby-sapphire/{}/tyrogue.png",
+    MookType.lightning: "https://img.pokemondb.net/sprites/ruby-sapphire/{}/pikachu.png",
 }
 
 class Player(models.Model):
