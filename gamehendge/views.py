@@ -98,7 +98,8 @@ def station_collect_energy(request):
         return JsonResponse({"error" : "Too far from tower."})
     if not request.user.is_authenticated:
         return JsonResponse({"error" : "Unathenticated user."})
-    if station.owner != Player.objects.get(user=request.user):
+    player = Player.objects.get(user=request.user)
+    if station.owner != player:
         return JsonResponse({"error" : "Not your tower to collect from."})
         
     station.owner.energy += station.gathered_energy
@@ -107,7 +108,7 @@ def station_collect_energy(request):
     station.save()
 
     return JsonResponse({
-        "station_json" : station_json(station), 
+        "station_json" : station_json(station, player), 
         "energy" : get_player_energy(request)
         })
 
@@ -149,7 +150,7 @@ def build_station(request):
     player.save()
 
     return JsonResponse({
-        "station_json" : station_json(station),
+        "station_json" : station_json(station, player),
         "energy" : get_player_energy(request)})
 
 @csrf_exempt
