@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 import dj_database_url
+import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -115,9 +116,13 @@ DATABASES['default'].update(dj_database_url.config(conn_max_age=500))
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-SECURE_SSL_REDIRECT = True
-CRSF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+require_security = True
+if socket.gethostname() == 'isidore-seville':
+    require_security = False
+
+SECURE_SSL_REDIRECT = require_security
+CRSF_COOKIE_SECURE = require_security
+SESSION_COOKIE_SECURE = require_security
 
 # Allow all host headers
 ALLOWED_HOSTS = ['*']

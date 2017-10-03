@@ -63,6 +63,9 @@ def move_mooks():
 			mook.save()
 		for mook in exploding_mooks:
 			# TODO: unhardcode this
+			print mook
+			print mook.path
+			print mook.path.dest
 			target = mook.path.dest
 			target.health -= 25
 			mook.delete()
