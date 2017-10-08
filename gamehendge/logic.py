@@ -61,14 +61,21 @@ def move_mooks():
 	with transaction.atomic():
 		for mook in moved_mooks:
 			mook.save()
+		targets = set()
 		for mook in exploding_mooks:
 			# TODO: unhardcode this
 			target = mook.path.dest
 			target.health -= 25
 			mook.delete()
+			targets.add(target)
+
+		for target in targets:
 			if target.health <= 0:
 				target.delete()
-			else: target.save()
+			else:
+				target.save()
+		
+
 
 def within(latlon1, latlon2, miles):
 	# TODO: write code to check distance

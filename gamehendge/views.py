@@ -14,10 +14,16 @@ from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 
-def station_json(station):
+def station_json(station, player):
+
+    if (station.owner == player):
+        image_type = 'shiny'
+    else:
+        image_type = 'normal'
+
     returnable_json = {
         "position": {"lat": station.lat, "lng": station.lon}, 
-        "icon" : STATION_TYPE_IMAGES[StationType(station.station_type)] ,
+        "icon" : STATION_TYPE_IMAGES[StationType(station.station_type)].format(image_type),
         "station_type" : StationType(station.station_type).name ,
         "gathered_energy" : station.gathered_energy,
         "db_id" : station.pk,
@@ -31,23 +37,36 @@ def station_json(station):
     return returnable_json
 
 def station_locations(request):
+    player = None
+    if request.user.is_authenticated:
+        player = Player.objects.get(user=request.user)
     #if request.user.is_authenticated():
-    stations_list = [station_json(station) for station in Station.objects.all()]
+    stations_list = [station_json(station, player) for station in Station.objects.all()]
 
     return JsonResponse({"data" : stations_list})
     #else:
     #    return HttpResponse("Maybe login first?")
 
-def mook_json(mook):
+def mook_json(mook, player):
+
+    if (mook.owner == player):
+        image_type = 'shiny'
+    else:
+        image_type = 'normal'
+
     returnable_json = {
         "position": {"lat": mook.lat, "lng": mook.lon}, 
-        "icon" : MOOK_TYPE_IMAGES[MookType(mook.mook_type)],
+        "icon" : MOOK_TYPE_IMAGES[MookType(mook.mook_type)].format(image_type),
         "health" : mook.health
     }
     return returnable_json
 
 def mook_locations(request):
-    mook_list = [mook_json(mook) for mook in Mook.objects.all()]
+    player = None
+    if request.user.is_authenticated:
+        player = Player.objects.get(user=request.user)
+
+    mook_list = [mook_json(mook, player) for mook in Mook.objects.all()]
 
     return JsonResponse({"data" : mook_list})
 
@@ -71,15 +90,16 @@ def move_mooks_webpage(request):
 @csrf_exempt
 def station_collect_energy(request):
     pk = request.POST["pk"]
-    lat = request.POST["latitude"]
-    lon = request.POST["longitude"]
+    lat = float(request.POST["latitude"])
+    lon = float(request.POST["longitude"])
 
     station = Station.objects.get(pk=pk)
     if not logic.within((lat, lon), (station.lat, station.lon), 0.1):
         return JsonResponse({"error" : "Too far from tower."})
     if not request.user.is_authenticated:
         return JsonResponse({"error" : "Unathenticated user."})
-    if station.owner != Player.objects.get(user=request.user):
+    player = Player.objects.get(user=request.user)
+    if station.owner != player:
         return JsonResponse({"error" : "Not your tower to collect from."})
         
     station.owner.energy += station.gathered_energy
@@ -88,15 +108,15 @@ def station_collect_energy(request):
     station.save()
 
     return JsonResponse({
-        "station_json" : station_json(station), 
+        "station_json" : station_json(station, player), 
         "energy" : get_player_energy(request)
         })
 
 @csrf_exempt
 def build_station(request):
     kind = request.POST["kind"]
-    lat = request.POST["latitude"]
-    lon = request.POST["longitude"]
+    lat = float(request.POST["latitude"])
+    lon = float(request.POST["longitude"])
 
     # TODO: add check for nearby towers so towers can't be placed too close together
 
@@ -130,7 +150,7 @@ def build_station(request):
     player.save()
 
     return JsonResponse({
-        "station_json" : station_json(station),
+        "station_json" : station_json(station, player),
         "energy" : get_player_energy(request)})
 
 @csrf_exempt
