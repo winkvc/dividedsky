@@ -47,7 +47,7 @@ public class ScratchScript : MonoBehaviour {
 	}
 
 	IEnumerator GetStationLocations() {
-		Debug.Log ("Sending request...");
+		//Debug.Log ("Sending request...");
 		UnityWebRequest www = UnityWebRequest.Get("http://dividedsky.herokuapp.com/station_locations/");
 		yield return www.SendWebRequest();
 
@@ -73,15 +73,15 @@ public class ScratchScript : MonoBehaviour {
 		if (hasMapLoaded && hasStationsJsonLoaded) {
 			LoadStations ();
 		} else {
-			Debug.Log ("map:");
-			Debug.Log (hasMapLoaded);
-			Debug.Log ("json:"); 
-			Debug.Log (hasStationsJsonLoaded);
+			//Debug.Log ("map:");
+			//Debug.Log (hasMapLoaded);
+			//Debug.Log ("json:"); 
+			//Debug.Log (hasStationsJsonLoaded);
 		}
 	}
 
 	void LoadStations() {
-		Debug.Log ("Loadstations");
+		//Debug.Log ("Loadstations");
 		// assuming both things have loaded.
 		foreach (Datum datum in jsonResult.data) {
 			Vector2d latLon = new Vector2d((float)datum.position.lat, (float)datum.position.lng);
@@ -95,7 +95,7 @@ public class ScratchScript : MonoBehaviour {
 		// create some object at 37.425177, -122.171306
 		Vector2d latLon = new Vector2d(37.425177f, -122.171306f);
 		Vector2d unityWorld = Conversions.GeoToWorldPosition (latLon, _map.CenterMercator, _map.WorldRelativeScale);
-		Debug.Log (unityWorld);
+		//Debug.Log (unityWorld);
 		transform.position = new Vector3 ((float)unityWorld.x, transform.position.y, (float)unityWorld.y);
 	}
 	
