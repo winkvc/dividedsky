@@ -8,9 +8,11 @@ from django.db import transaction
 
 from .models import Mook, MookType, Station, StationType, Path
 import polyline
-import math
+import math, os
 import googlemaps
 from random import shuffle
+
+from twilio.rest import Client as TwilioClient
 
 # gives distance (in miles) between two (lat,lon) points
 def great_circle_distance(lat1, lon1, lat2, lon2):
@@ -72,6 +74,9 @@ def move_mooks():
 		for target in targets:
 			if target.health <= 0:
 				target.delete()
+				notify(target.owner, 
+						"Your tower was destroyed! "
+						"https://dividedsky.herokuapp.com/")
 			else:
 				target.save()
 		
@@ -95,6 +100,12 @@ def credit_energy():
 		tower.gathered_energy += 1
 		if tower.gathered_energy > 10:
 			tower.gathered_energy = 10
+		elif tower.gathered_energy == 10:
+			notify(
+				tower.owner,
+				"An energy tower of yours has reached full capacity. "
+				"https://dividedsky.herokuapp.com/"
+				)
 		#print tower.gathered_energy
 
 	# update
@@ -184,6 +195,10 @@ def calculate_attacks():
 			if attacker.health > 0:
 				attacker.save()
 			else:
+				if type(attacker) == Station:
+					notify(attacker.owner, 
+						"Your tower was destroyed! "
+						"https://dividedsky.herokuapp.com/")
 				attacker.delete()
 
 def spawn_mooks():
@@ -237,3 +252,14 @@ def spawn_mooks():
 		for mook in new_mooks:
 			mook.save()
 
+def notify(player, message_string):
+	account_sid = "ACff780d521b2eef4ae72b28aafeec12e7"
+	auth_token  = os.environ['DIVIDEDSKY_TWILIO_KEY']
+	client = TwilioClient(account_sid, auth_token)
+
+	player_phone = player.phone_number
+	if player_phone:
+		message = client.messages.create(
+			to=player.phone_number, 
+			from_="+13093067177",
+			body=message_string)
