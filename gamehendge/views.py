@@ -89,7 +89,6 @@ def move_mooks_webpage(request):
 
 
 # TODO: should these calls be csrf_exempt?
-@csrf_exempt
 def station_collect_energy(request):
     pk = request.POST["pk"]
     lat = float(request.POST["latitude"])
@@ -114,7 +113,6 @@ def station_collect_energy(request):
         "energy" : get_player_energy(request)
         })
 
-@csrf_exempt
 def build_station(request):
     kind = request.POST["kind"]
     lat = float(request.POST["latitude"])
@@ -155,7 +153,6 @@ def build_station(request):
         "station_json" : station_json(station, player),
         "energy" : get_player_energy(request)})
 
-@csrf_exempt
 def delete_station(request):
     pk = request.POST["pk"]
 
@@ -173,24 +170,7 @@ def delete_station(request):
 
     return JsonResponse({"energy" : get_player_energy(request)})
 
-@csrf_exempt
 def change_target(request):
-    """$.post( "change_target/", 
-    {
-      'source' : rerouteStationDbId,
-      'target' : targetDbId,
-      'latitude' : userPosition.lat,
-      'longitude' : userPosition.lng
-    }, function (reply) {
-      if (reply.error) {
-        alert(reply.error);
-      } else {
-        var path_json = reply.path_json;
-        renderStationPath(path_json, map);
-      }
-    }, 'json' );"""
-
-    print request.POST
 
     source_pk = request.POST["source"]
     target_pk = request.POST["target"]
@@ -225,7 +205,6 @@ def change_target(request):
             }
         }
     }
-
     print(response)
 
     return JsonResponse(response)

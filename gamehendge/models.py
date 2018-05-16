@@ -57,8 +57,8 @@ class Station(models.Model):
     	return str(self.owner) + "'s " + StationType(self.station_type).name + " station"
 
 class Path(models.Model):
-    source = models.ForeignKey(Station, null=True, on_delete=models.SET_NULL, related_name="source_paths")
-    dest = models.ForeignKey(Station, null=True, on_delete=models.SET_NULL, related_name="dest_paths")
+    source = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="source_paths")
+    dest = models.ForeignKey(Station, on_delete=models.CASCADE, related_name="dest_paths")
     encoded_polyline = models.TextField()
 
     def __str__(self):
