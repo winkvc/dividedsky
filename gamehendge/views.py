@@ -8,9 +8,11 @@ from .models import Player, \
     Station, STATION_TYPE_IMAGES, StationType, \
     Mook, MOOK_TYPE_IMAGES, MookType
 
+import os
 import logic
 
 from django.views.decorators.csrf import csrf_exempt
+from twilio.rest import Client
 
 # Create your views here.
 
@@ -227,3 +229,18 @@ def change_target(request):
     print(response)
 
     return JsonResponse(response)
+
+def text_mark(request):
+    # Your Account SID from twilio.com/console
+    account_sid = "ACff780d521b2eef4ae72b28aafeec12e7"
+    # Your Auth Token from twilio.com/console
+    auth_token  = os.environ['DIVIDEDSKY_TWILIO_KEY']
+
+    client = Client(account_sid, auth_token)
+
+    message = client.messages.create(
+        to="+13095734538", 
+        from_="+13093067177",
+        body="Hello from Heroku!")
+
+    return HttpResponse(message.sid)
