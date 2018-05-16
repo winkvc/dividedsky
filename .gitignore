@@ -1,4 +1,8 @@
+# standard Python and Django unincludes
 venv
 *.pyc
 staticfiles
 .env
+
+# don't save the database, it just causes problems.
+db.sqlite3

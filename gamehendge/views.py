@@ -192,6 +192,13 @@ def change_target(request):
     source.target = target
     # TODO: change the path too?
     source.save()
+    logic.notify(
+        source.target.owner,
+        "{} just directed an attack towards you! "
+        "https://dividedsky.herokuapp.com/".format(
+            source.owner.user.username
+            )
+        )
 
     response = {
         "path_json" : {

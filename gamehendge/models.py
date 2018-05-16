@@ -39,6 +39,7 @@ class Player(models.Model):
     user = models.ForeignKey(User)
     energy = models.IntegerField()
     team = models.IntegerField(choices=TEAM_CHOICES)
+    phone_number = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
     	return str(self.user)
