@@ -117,8 +117,11 @@ DATABASES['default'].update(dj_database_url.config(conn_max_age=500))
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 require_security = True
-print socket.gethostname()
-if socket.gethostname() == 'DN0a1f4a28.SUNet':
+approved_hostnames = [
+    'DN0a1f4a28.SUNet', # ale
+    'isidore-seville', # mork
+]
+if socket.gethostname() in approved_hostnames:
     require_security = False
 
 SECURE_SSL_REDIRECT = require_security
