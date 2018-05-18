@@ -18,6 +18,9 @@ $ python -m venv venv
 maybe you need to load.
 also that command is riffed from the python3 version, it might be wrong.
 
+## install Postgresql
+- https://stackoverflow.com/questions/11618898/pg-config-executable-not-found
+
 ## Requirements
 
 now add in all the requirements from requirements.txt
