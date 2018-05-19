@@ -96,7 +96,8 @@ header[role=banner]::after {
   width: 44px;
   height: 100%;
   background: url("https://s3-us-west-2.amazonaws.com/s.cdpn.io/148866/cd-icon-menu.svg") no-repeat center center;
-  cursor: pointer;
+  cursor: pointer;    
+    margin-left: -80px;
 }
 .main-nav ul {
   position: absolute;
@@ -222,7 +223,7 @@ xsigin/signup popup
   width: 90%;
   max-width: 600px;
   background: #FFF;
-  margin: 3em auto 4em;
+  margin: 8em auto 4em;
   cursor: auto;
   border-radius: 0.25em;
   -webkit-transform: translateY(-30px);
@@ -277,6 +278,7 @@ xsigin/signup popup
 
 .cd-form {
   padding: 1.4em;
+    margin-bottom: -2px;
 }
 .cd-form .fieldset {
   position: relative;
@@ -355,7 +357,7 @@ xsigin/signup popup
   padding-right: 65px;
 }
 .cd-form input[type=submit] {
-  padding: 16px 0;
+  padding: 2px 0;
   cursor: pointer;
   background: #2f889a;
   color: #FFF;
@@ -445,7 +447,7 @@ xsigin/signup popup
     padding: 16px 20px 16px 50px;
   }
   .cd-form input[type=submit] {
-    padding: 16px 0;
+/*    padding: 16px 0;*/
   }
 }
 
@@ -459,20 +461,22 @@ xsigin/signup popup
 @media only screen and (min-width: 600px) {
   .cd-form-message {
     padding: 2em 2em 0;
+      text-align: center;
   }
 }
 
 .cd-form-bottom-message {
-  position: absolute;
-  width: 100%;
+  position: 0px;
+    padding-bottom: 1em;
+    width: 100%;
   left: 0;
-  bottom: -30px;
+  bottom: 30px;
   text-align: center;
   font-size: 14px;
   font-size: 0.875rem;
 }
 .cd-form-bottom-message a {
-  color: #FFF;
+  color: #505260;
   text-decoration: underline;
 }
 

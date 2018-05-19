@@ -31,9 +31,13 @@
 <body>
   
     <header role="banner">
-        
+         {% if user.is_authenticated %}
+         <div id="cd-logo"> <h2 class="title" style="color:white;">Logged in</h2></div>
+
+         {% else %}
         <div id="cd-logo"> <h2 class="title" style="color:white;">Divided Sky V0.0.0</h2></div>
-        
+
+        {% endif %}
 		<nav class="main-nav">
            
         {% if user.is_authenticated %}
@@ -60,28 +64,32 @@
 			</ul>
 
 			<div id="cd-login"> <!-- log in form -->
-				<form class="cd-form">
+				<form method="post" action="{% url 'login' %}" class="cd-form">
+                    {% csrf_token %}
 					<p class="fieldset">
-						<label class="image-replace cd-email" for="signin-email">E-mail</label>
-						<input class="full-width has-padding has-border" id="signin-email" type="email" placeholder="E-mail">
+						<label class="image-replace cd-email" for="signin-email">Username</label>
+						<input class="full-width has-padding has-border" id="signin-email" type="username" placeholder="Username">
 						<span class="cd-error-message">Error!</span>
 					</p>
 
 					<p class="fieldset">
 						<label class="image-replace cd-password" for="signin-password">Password</label>
-						<input class="full-width has-padding has-border" id="signin-password" type="text"  placeholder="Password">
+						<input class="full-width has-padding has-border" id="signin-password" type="password"  placeholder="Password">
 						<a href="#0" class="hide-password">Hide</a>
 						<span class="cd-error-message">Error!</span>
 					</p>
 
+<!--
 					<p class="fieldset">
 						<input type="checkbox" id="remember-me" checked>
 						<label for="remember-me">Remember me</label>
 					</p>
-
+-->
 					<p class="fieldset">
 						<input class="full-width" type="submit" value="Login">
+                        <input type="hidden" name="next" value="{{ next }}" />
 					</p>
+                    
 				</form>
 				
 				<p class="cd-form-bottom-message"><a href="#0">Forgot your password?</a></p>
