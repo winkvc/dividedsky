@@ -33,7 +33,15 @@ public class ScratchScript : MonoBehaviour {
 	}
 
 	public AbstractMap _map;
-	public GameObject station;
+
+	[Serializable]
+	public class NameToGameObject
+	{
+		public string sprite;
+		public GameObject station;
+	}
+
+	public NameToGameObject[] stations;
 
 	private RootObject jsonResult;
 
@@ -87,7 +95,13 @@ public class ScratchScript : MonoBehaviour {
 			Vector2d latLon = new Vector2d((float)datum.position.lat, (float)datum.position.lng);
 			Vector2d unityXZ = Conversions.GeoToWorldPosition (latLon, _map.CenterMercator, _map.WorldRelativeScale);
 			Vector3 unityWorld = new Vector3 ((float)unityXZ.x, transform.position.y, (float)unityXZ.y);
-			Instantiate (station, unityWorld, new Quaternion ());
+			foreach (NameToGameObject description in stations) {
+				if ( datum.icon.EndsWith(description.sprite)) {
+					Instantiate (description.station, unityWorld, new Quaternion ());
+					break;
+				}
+			}
+			
 		}
 	}
 

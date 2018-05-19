@@ -189,7 +189,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 8030620}
   m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 50, z: -30}
+  m_LocalPosition: {x: 0, y: 32.2, z: -19.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -745,7 +745,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _map: {fileID: 2036628608}
-  station: {fileID: 1517545643203068, guid: 620fae6a474a74aedbd9083c123a6cf4, type: 2}
+  stations:
+  - sprite: ditto.png
+    station: {fileID: 1688192114511266, guid: d5a5b92a201ec46d892d615f9736ea10, type: 2}
+  - sprite: hitmonchan.png
+    station: {fileID: 1517545643203068, guid: 620fae6a474a74aedbd9083c123a6cf4, type: 2}
+  - sprite: raichu.png
+    station: {fileID: 1568359543216896, guid: bf6803f14a3334911b013f0aaf6dbbef, type: 2}
 --- !u!4 &1289605296
 Transform:
   m_ObjectHideFlags: 0
@@ -1188,7 +1194,7 @@ MonoBehaviour:
   _options:
     locationOptions:
       latitudeLongitude: 37.784179, -122.401583
-      zoom: 12
+      zoom: 13
     extentOptions:
       extentType: 0
       cameraBoundsOptions:
@@ -1214,12 +1220,12 @@ MonoBehaviour:
     loadingTexture: {fileID: 2800000, guid: e2896a92727704803a9c422b043eae89, type: 3}
   _imagery:
     _layerProperty:
-      sourceType: 0
+      sourceType: 2
       sourceOptions:
         isActive: 1
         layerSource:
           Name: Streets
-          Id: mapbox://styles/mapbox/streets-v10
+          Id: mapbox://styles/mapbox/dark-v9
           Modified: 
           UserName: 
       rasterOptions:
