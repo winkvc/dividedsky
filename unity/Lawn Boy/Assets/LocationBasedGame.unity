@@ -1192,7 +1192,7 @@ MonoBehaviour:
     extentOptions:
       extentType: 0
       cameraBoundsOptions:
-        camera: {fileID: 0}
+        camera: {fileID: 8030623}
         visibleBuffer: 0
         disposeBuffer: 0
         updateInterval: 0

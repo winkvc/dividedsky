@@ -43,5 +43,9 @@ public class DragMap : MonoBehaviour {
 			Vector3 vectorPoint = GetRaycast();
 			castingCamera.gameObject.transform.position += (targetPoint - vectorPoint);
 		}
+
+		if (Input.GetKeyDown (KeyCode.A)) {
+			map.UpdateMap(map.CenterLatitudeLongitude, 13.0f);
+		}
 	}
 }
