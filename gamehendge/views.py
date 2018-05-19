@@ -123,6 +123,14 @@ def build_station(request):
     if not request.user.is_authenticated:
         return JsonResponse({"error" : "Player not logged in."})
 
+    # make sure they're far enough from other towers.
+
+    if any([
+        logic.great_circle_distance(lat, lon, tower.lat, tower.lon) < 0.05
+        for tower
+        in Station.objects.all()]):
+        return JsonResponse({"error" : "Too close to nearby towers."})
+
     # check if there's enough energy for them to build their tower
     # TODO: make this a database type? not sure how to do this.
     if kind == 'lightning':
