@@ -112,10 +112,22 @@ function changeTargetRequest(targetDbId) {
 }
 
 function renderStation (element, map) {
+  var latlon = {lat : +element.position.lat, lng : +element.position.lng};
   var marker = new google.maps.Marker({
-    position: {lat : +element.position.lat, lng : +element.position.lng},
+    position: latlon,
     map: map,
     icon: element.icon
+  });
+
+  var towercircle = new google.maps.Circle({
+    strokeColor: '#333',
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: '#333',
+    fillOpacity: 0.35,
+    map: map,
+    center: latlon,
+    radius: 81,
   });
 
   // make an infowindow
