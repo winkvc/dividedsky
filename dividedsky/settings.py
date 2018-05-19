@@ -118,7 +118,7 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 require_security = True
 print socket.gethostname()
-if socket.gethostname() == 'DN0a1f4a28.SUNet':
+if "SUNet" in socket.gethostname(): # == 'DN0a237906.SUNet': # it was DN0a1f4a28.SUNet
     require_security = False
 
 SECURE_SSL_REDIRECT = require_security

@@ -6,6 +6,29 @@ var directionsService;
 var listeningForReroute = false;
 var rerouteStationDbId = null;
 
+jQuery(function($) {
+    $(document).ready(function() {
+        $('#map').height(getRealContentHeight());
+//        $('#map').height($( window ).height());
+        });
+        // On Resize
+    $(window).resize(function(){ 
+       // $('#map').height(getRealContentHeight()); 
+       $('#map').height($( window ).height());
+    });
+});
+
+function getRealContentHeight() {
+	var header = $.mobile.activePage.find("header[role='banner']:visible");
+	var content = $.mobile.activePage.find("div[id='map']:visible:visible");
+	var viewport_height = $(window).height();
+	var content_height = viewport_height - header.outerHeight();
+	if((content.outerHeight() - header.outerHeight()) <= viewport_height) {
+		content_height -= (content.outerHeight() - content.height());
+	} 
+	return content_height;
+}
+
 // Cross-site request forgery issues.
 var csrftoken = Cookies.get('csrftoken');
 function csrfSafeMethod(method) {
@@ -152,11 +175,15 @@ function initMap() {
   });
   directionsService = new google.maps.DirectionsService;
 
-  map = new google.maps.Map(document.getElementById('map'), {
+  map = new google.maps.Map(document.getElementById("map"), {
     zoom: 14,
     // TODO: unhardcode the center data??
     center: {lat: 37.427489, lng: -122.170244}
   });
+    
+    $(document).ready(function() {
+        $('#map').height($( window ).height());
+        });
 
   directionsDisplay.setMap(map);
 
