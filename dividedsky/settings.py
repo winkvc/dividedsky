@@ -124,7 +124,7 @@ approved_hostnames = [
 ]
 if socket.gethostname() in approved_hostnames:
     require_security = False
-else if "SUNet" in socket.gethostname():
+elif "SUNet" in socket.gethostname():
     require_security = False
 
 SECURE_SSL_REDIRECT = require_security
