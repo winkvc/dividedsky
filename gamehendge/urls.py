@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^change_target/$', views.change_target),
     url(r'^mook_locations/$', views.mook_locations),
     url(r'^text_mark/$', views.text_mark),
-    url(r'^accounts/login/$', auth_views.login, name='login'),
+    url(r'^$', views.map, name='login'),
 #               {'authentication_form': 'templates/gamehendge/map.html'},
     url(r'^logout/$', auth_views.logout, name='logout'),
     url(r'^admin/', admin.site.urls),
