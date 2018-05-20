@@ -32,28 +32,32 @@
   
     <header role="banner">
          {% if user.is_authenticated %}
-         <div id="cd-logo"> <h2 class="title" style="color:white;">Logged in</h2></div>
+        <div id="cd-logo"> 
+            <h2 class="title" style="color:white;">Energy: {{energy}}</h2>
+            
+        </div>
+        <div id="cd-logo"> 
+            <h1 style="color:white;">
+            <ul>
+                <button type="button" onClick="buildTower(map)">Build</button>
+<!--                <a class="build" id="buildtower">Build Tower</a>-->
+			</ul>
+            </h1>
 
+            
+        </div>
+
+        
          {% else %}
         <div id="cd-logo"> <h2 class="title" style="color:white;">Divided Sky V0.0.0</h2></div>
-
-        {% endif %}
-		<nav class="main-nav">
-           
-        {% if user.is_authenticated %}
-<!--        You are currently logged in.-->
-        <h4 id="energy"> Energy: {{energy}} </h4>
-            <ul>
-                <button onClick=buildTower(map)> Build Tower </button>
-			</ul>
-        {% else %}
+        <nav class="main-nav">
             <ul>
 				<li><a class="cd-signin" href="#0">Sign in</a></li>
 				<li><a class="cd-signup" href="#0">Sign up</a></li>
 			</ul>
-        {% endif %}
- 
 		</nav>
+        {% endif %}
+		
 	</header>
        
         <div class="cd-user-modal"> <!-- this is the entire modal form, including the background -->
