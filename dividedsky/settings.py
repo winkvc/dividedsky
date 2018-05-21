@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
-    'gamehendge.apps.GamehendgeConfig'
+    'gamehendge.apps.GamehendgeConfig',
 ]
 
 MIDDLEWARE = [
@@ -117,7 +117,14 @@ DATABASES['default'].update(dj_database_url.config(conn_max_age=500))
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 require_security = True
-if socket.gethostname() == 'isidore-seville':
+
+approved_hostnames = [
+    'DN0a1f4a28.SUNet', # ale
+    'isidore-seville', # mork
+]
+if socket.gethostname() in approved_hostnames:
+    require_security = False
+elif "SUNet" in socket.gethostname():
     require_security = False
 
 SECURE_SSL_REDIRECT = require_security
