@@ -291,7 +291,7 @@ function buildTower(map) {
     position: userPosition,
     map: map,
   });
-    alert("da wae");
+    //alert("da wae");
   // make the infowindow and show it
   var htmlSource =
       "<p>Energy Tower: 10 energy, get 1 energy per hour.</p>" +
