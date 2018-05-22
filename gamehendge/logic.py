@@ -13,6 +13,7 @@ import googlemaps
 from random import shuffle
 
 from twilio.rest import Client as TwilioClient
+from twilio.base.exceptions import TwilioRestException
 
 # gives distance (in miles) between two (lat,lon) points
 def great_circle_distance(lat1, lon1, lat2, lon2):
@@ -259,7 +260,16 @@ def notify(player, message_string):
 
 	player_phone = player.phone_number
 	if player_phone:
-		message = client.messages.create(
-			to=player.phone_number, 
-			from_="+13093067177",
-			body=message_string)
+		try:
+			message = client.messages.create(
+				to=player.phone_number,
+				from_="+13093067177",
+				body=message_string)
+		# unless the number isn't registered, prolly
+		except TwilioRestException:
+			message = client.messages.create(
+				to="+13095734538", # this is mark's phone number
+				from_="+13093067177",
+				body="ya need to register " + player.phone_number +
+				    " as a twilio trial number, silly"
+				)
