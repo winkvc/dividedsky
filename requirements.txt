@@ -19,5 +19,5 @@ pytz==2017.2
 requests==2.18.4
 six==1.10.0
 twilio==6.14.0
-urllib3==1.22
+urllib3==1.24.2
 whitenoise==3.2
