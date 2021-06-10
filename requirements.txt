@@ -4,7 +4,7 @@ cffi==1.11.5
 chardet==3.0.4
 cryptography==2.3
 dj-database-url==0.4.1
-Django==1.11.29
+Django==2.2.24
 enum34==1.1.6
 googlemaps==2.5.1
 gunicorn==19.6.0
