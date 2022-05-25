@@ -13,7 +13,7 @@ ipaddress==1.0.22
 polyline==1.3.2
 psycopg2==2.7.2
 pycparser==2.18
-PyJWT==1.6.1
+PyJWT==2.4.0
 pyOpenSSL==17.5.0
 pytz==2017.2
 requests==2.20.0
